@@ -1,6 +1,6 @@
 use std::fs::metadata;
-use std::os::windows::fs::MetadataExt; // For Windows-specific metadata
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::os::windows::fs::MetadataExt;
+use std::time::UNIX_EPOCH;
 
 pub fn exifextract(path: &String) {
     let path = path;
