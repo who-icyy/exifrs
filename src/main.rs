@@ -1,5 +1,5 @@
 use clap::{Arg, Command};
-mod extract;
+mod read;
 fn main() {
     let matches = Command::new("<File location>")
     .version("1.0.0")
@@ -14,5 +14,5 @@ fn main() {
 
     let input: &String = matches.get_one::<String>("path").unwrap();
 
-    extract::exifextract(input);
+    read::exifextract(input);
 }
