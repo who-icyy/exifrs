@@ -15,7 +15,4 @@ fn main() {
     let input: &String = matches.get_one::<String>("path").unwrap();
 
     extract::exifextract(input);
-    
-
-    println!("{}",input);
 }
