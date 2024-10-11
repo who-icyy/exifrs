@@ -1,45 +1,32 @@
-use std::fs::metadata;
-use std::os::windows::fs::MetadataExt;
-use std::time::UNIX_EPOCH;
+use std::fs::File;
+use std::io;
+use std::io::{Read, Seek, SeekFrom};
 
-pub fn exifextract(path: &String) {
-    let path = path;
+pub fn exifextract(path: &String) -> io::Result<()> {
+    let mut file = File::open(path)?;
+    let mut buffer = [0; 2];
 
-    match metadata(path) {
-        Ok(meta) => {
-            // File size
-            let file_size = meta.len();
-            println!("File size: {} bytes", file_size);
+    file.read_exact(&mut buffer)?;
 
-            // File permissions (Readonly)
-            let permissions = meta.permissions();
-            println!("Read-only: {}", permissions.readonly());
-
-            // File attributes (Windows-specific)
-            let attributes = meta.file_attributes();
-            println!("File attributes: {}", attributes);
-
-            if let Ok(access_time) = meta.accessed() {
-                if let Ok(duration) = access_time.duration_since(UNIX_EPOCH) {
-                    println!("Last accessed: {} seconds", duration.as_secs());
-                }
-            }
-
-            // Creation time
-            if let Ok(creation_time) = meta.created() {
-                if let Ok(duration) = creation_time.duration_since(UNIX_EPOCH) {
-                    println!("Creation time: {} seconds", duration.as_secs());
-                }
-            }
-
-            if let Ok(modified_time) = meta.modified() {
-                if let Ok(duration) = modified_time.duration_since(UNIX_EPOCH) {
-                    println!("Last modified: {} seconds", duration.as_secs());
-                }
-            }
-        }
-        Err(e) => {
-            println!("Error retrieving metadata: {}", e);
-        }
+    if &buffer == b"\xFF\xD8" {
+        println!("This is a JPEG file.");
+    } else {
+        println!("Not a JPEG file.");
+        return Ok(());
     }
+
+    file.seek(SeekFrom::Start(2))?;
+    let mut marker_buffer = [0; 4];
+
+    while file.read_exact(&mut marker_buffer).is_ok() {
+        if &marker_buffer[0..2] == b"\xFF\xE1" {
+            println!("Found EXIF marker.");
+            break;
+        }
+
+        let segment_length = u16::from_be_bytes([marker_buffer[2], marker_buffer[3]]);
+        file.seek(SeekFrom::Current(i64::from(segment_length) - 2))?;
+    }
+
+    Ok(())
 }
