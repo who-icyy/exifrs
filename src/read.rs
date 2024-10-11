@@ -21,29 +21,20 @@ pub fn exifextract(path: &String) {
 
             if let Ok(access_time) = meta.accessed() {
                 if let Ok(duration) = access_time.duration_since(UNIX_EPOCH) {
-                    println!(
-                        "Last accessed: {} seconds since UNIX EPOCH",
-                        duration.as_secs()
-                    );
+                    println!("Last accessed: {} seconds", duration.as_secs());
                 }
             }
 
             // Creation time
             if let Ok(creation_time) = meta.created() {
                 if let Ok(duration) = creation_time.duration_since(UNIX_EPOCH) {
-                    println!(
-                        "Creation time: {} seconds since UNIX EPOCH",
-                        duration.as_secs()
-                    );
+                    println!("Creation time: {} seconds", duration.as_secs());
                 }
             }
 
             if let Ok(modified_time) = meta.modified() {
                 if let Ok(duration) = modified_time.duration_since(UNIX_EPOCH) {
-                    println!(
-                        "Last modified: {} seconds since UNIX EPOCH",
-                        duration.as_secs()
-                    );
+                    println!("Last modified: {} seconds", duration.as_secs());
                 }
             }
         }

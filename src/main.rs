@@ -1,6 +1,5 @@
-use std::path;
-
 use clap::{Arg, Command};
+use read::exifextract;
 mod read;
 fn main() {
     let matches = Command::new("<File location>")
@@ -23,5 +22,7 @@ fn main() {
         .get_matches();
 
     let file_path: &String = matches.get_one::<String>("path").unwrap();  
+
+    exifextract(file_path);
 
 }
