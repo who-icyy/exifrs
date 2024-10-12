@@ -21,8 +21,9 @@ fn main() {
         )
         .get_matches();
 
-    let file_path: &String = matches.get_one::<String>("path").unwrap();  
+    // let file_path: &String = matches.get_one::<String>("path").unwrap();  
+    let path: &str = matches.get_one::<String>("path").unwrap();
 
-    let _result = exifextract(file_path);
+    let _result = exifextract(path);
 
 }
