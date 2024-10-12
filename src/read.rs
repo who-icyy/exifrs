@@ -4,6 +4,7 @@ use prettytable::{Cell, Row, Table};
 use std::fs::{metadata, File};
 use std::io::BufReader;
 use std::time::{SystemTime, UNIX_EPOCH};
+use colored::*;
 
 pub fn exifextract(path: &str) {
     // Open the JPEG file
@@ -25,15 +26,15 @@ pub fn exifextract(path: &str) {
 fn print_image_info_in_table(info: ImageInfo, path: &str) {
     // Create a table to display the image information
     let mut table = Table::new();
-    table.add_row(Row::new(vec![Cell::new("Field"), Cell::new("Value")]));
+    table.add_row(Row::new(vec![Cell::new(&"Field".green().to_string()), Cell::new(&"Value")]));
 
     // Add rows with image information to the table
     table.add_row(Row::new(vec![
-        Cell::new("Dimensions"),
+        Cell::new(&"Dimensions".green().to_string()),
         Cell::new(&format!("{} x {}", info.width, info.height)),
     ]));
     table.add_row(Row::new(vec![
-        Cell::new("Color Type"),
+        Cell::new(&"Color Type".green().to_string()),
         Cell::new(&format!("{:?}", info.pixel_format)),
     ]));
 
@@ -41,7 +42,7 @@ fn print_image_info_in_table(info: ImageInfo, path: &str) {
         if let Ok(modified) = metadata.modified() {
             let modified_time = system_time_to_date_time(modified);
             table.add_row(Row::new(vec![
-                Cell::new("Last Modified"),
+                Cell::new(&"Last Modified".green().to_string()),
                 Cell::new(&modified_time),
             ]));
         }
@@ -49,14 +50,14 @@ fn print_image_info_in_table(info: ImageInfo, path: &str) {
         if let Ok(created) = metadata.created() {
             let created_time = system_time_to_date_time(created);
             table.add_row(Row::new(vec![
-                Cell::new("Creation Time"),
+                Cell::new(&"Creation Time".green().to_string()),
                 Cell::new(&created_time),
             ]));
         }
 
         let file_size = metadata.len();
         table.add_row(Row::new(vec![
-            Cell::new("File Size"),
+            Cell::new(&"Size".green().to_string()),
             Cell::new(&format!("{} bytes", file_size)),
         ]));
     }
