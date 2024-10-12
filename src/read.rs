@@ -1,10 +1,10 @@
 use chrono::DateTime;
+use colored::*;
 use jpeg_decoder::{Decoder, ImageInfo};
 use prettytable::{Cell, Row, Table};
 use std::fs::{metadata, File};
 use std::io::BufReader;
 use std::time::{SystemTime, UNIX_EPOCH};
-use colored::*;
 
 pub fn exifextract(path: &str) {
     // Open the JPEG file
@@ -26,7 +26,10 @@ pub fn exifextract(path: &str) {
 fn print_image_info_in_table(info: ImageInfo, path: &str) {
     // Create a table to display the image information
     let mut table = Table::new();
-    table.add_row(Row::new(vec![Cell::new(&"Field".green().to_string()), Cell::new(&"Value")]));
+    table.add_row(Row::new(vec![
+        Cell::new(&"Field".green().to_string()),
+        Cell::new(&"Value"),
+    ]));
 
     // Add rows with image information to the table
     table.add_row(Row::new(vec![
@@ -65,7 +68,6 @@ fn print_image_info_in_table(info: ImageInfo, path: &str) {
     table.printstd();
 }
 
-// Helper function to convert SystemTime to a human-readable date-time string
 fn system_time_to_date_time(system_time: SystemTime) -> String {
     let datetime = system_time
         .duration_since(UNIX_EPOCH)
